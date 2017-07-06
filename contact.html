@@ -1,0 +1,46 @@
+<script>
+function _(id){ return document.getElementById(id); }
+function submitForm(){
+	_("mybtn").disabled = true;
+	_("status").innerHTML = 'please wait ...';
+	var formdata = new FormData();
+	formdata.append( "n", _("n").value );
+	formdata.append( "e", _("e").value );
+	formdata.append( "m", _("m").value );
+	var ajax = new XMLHttpRequest();
+	ajax.open( "POST", "mail.php" );
+	ajax.onreadystatechange = function() {
+		if(ajax.readyState == 4 && ajax.status == 200) {
+			if(ajax.responseText == "success"){
+				_("my_form").innerHTML = '<h2>Thanks '+_("n").value+', your message has been sent.</h2>';
+			} else {
+				_("status").innerHTML = ajax.responseText;
+				_("mybtn").disabled = false;
+			}
+		}
+	}
+	ajax.send( formdata );
+}
+</script>
+<form id="my_form" onsubmit="submitForm(); return false;">
+    <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="1s">
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-user-o" aria-hidden="true"></i></span>
+        <input id="n" type="text" class="form-control" aria-describedby="sizing-addon1" placeholder="Full Name" required="required">
+      </div>
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+        <input id="e" type="email" class="form-control" aria-describedby="sizing-addon1" placeholder="Email Address" required>
+      </div>
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-phone" aria-hidden="true"></i></span>
+        <input id="m" type="text" class="form-control" aria-describedby="sizing-addon1" placeholder="Phone Number">
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="1s">
+      <div class="input-group">
+        <textarea name="text" rows="6" cols="80" class="form-control"></textarea>
+      </div>
+      <p><input id="mybtn" type="submit" value="Submit Form"> <span id="status"></span></p>
+    </div>
+  </form>
